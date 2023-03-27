@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<p id="result"></p>
+<input type="text" id="create" placeholder="The Name Student...">
+<button id="btn-create" onclick="createStudent()">Create</button>
+<input type="text" id="search" placeholder="Search Student">
+<button id="btn-Search">Search</button>
+
+<table border="1" style="margin: 10px">
+  <tr>
+    <th>STT</th>
+    <th>NAME</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </tr>
+  <tbody id="dataList">
+
+  </tbody>
+
+</table>
+
+<script>
+  let count = 0;
+  function createStudent() {
+    count++;
+    let create = document.getElementById('create').value;
+    if (create === ""){
+      document.getElementById('result').innerHTML='The name is required ! Please try again '
+    } else {
+      let dataListTag = document.getElementById('dataList');
+      dataListTag.innerHTML +="<tr>"+"<td>"+count+"</td>"+
+              "<td>"+create+"</td>"+
+              "<td><button class='btn' onclick='editStudent(${count - 1})'>Edit</button></td>" +
+              "<td><button class='btn' onclick='deleteStudent(${count - 1})'>Delete</button></td>"+
+              "</tr>"
+      document.getElementById('result').innerHTML='Create Student Success!'
+    }
+  }
+  function editStudent(index) {
+    let dataList = document.getElementById('dataList');
+    let row = dataList.children[index];
+    let name = row.children[1].textContent;
+    let newName = prompt('Enter the name to edit:', name);
+    if (newName !== null && newName !== '') {
+      row.children[1].textContent = newName;
+    }
+  }
+</script>
+</body>
+</html>
+</body>
+</html>
