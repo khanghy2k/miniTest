@@ -3,65 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
-<p id="result"></p>
-<input type="text" id="create" placeholder="The Name Student...">
-<button id="btn-create" onclick="createStudent()">Create</button>
-<input type="text" id="search" placeholder="Search Student">
-<button id="btn-Search">Search</button>
+<div style="text-align: center">
+    <label id="validate" style="color: red"></label><br>
+    <input id="newStudent" style="width: 500px" type="text" placeholder="The name Student ....">
+    <button  style="background-color: #95ec95; color: red; border-radius: 20%"  onclick="createStudent()">Create</button>
+    <br>
+    <input id="search" style="width: 500px" type="text" placeholder="The name Student ...." oninput="Search()">
+    <button style="background-color: #d395ec; color: #0066ff; border-radius: 20%">Search</button>
+</div>
 
-<table border="1" style="margin: 10px">
-  <tr>
-    <th>STT</th>
-    <th>NAME</th>
-    <th>Edit</th>
-    <th>Delete</th>
-  </tr>
-  <tbody id="dataList">
-
-  </tbody>
-
+<table border="1" style="width: 100%">
+    <caption style="color: blue; font-weight: bold">STUDENT MANAGE</caption>
+    <tr>
+        <th>STT</th>
+        <th>NAME</th>
+        <th>EDIT</th>
+        <th>DELETE</th>
+    </tr>
+    <tbody id="drawTable">
+    </tbody>
 </table>
-
 <script>
-  let count = 0;
-  function createStudent() {
-    count++;
-    let create = document.getElementById('create').value;
-    if (create === ""){
-      document.getElementById('result').innerHTML='The name is required ! Please try again '
-    } else {
-      let dataListTag = document.getElementById('dataList');
-      dataListTag.innerHTML +="<tr>"+"<td>"+count+"</td>"+
-              "<td>"+create+"</td>"+
-              "<td><button class='btn' onclick='editStudent(${count - 1})'>Edit</button></td>" +
-              "<td><button class='btn' onclick='deleteStudent(${count - 1})'>Delete</button></td>"+
-              "</tr>"
-      document.getElementById('result').innerHTML='Create Student Success!'
+   let listStudent = ['Hy','Quang'];
+   let listSearch = [];
+    function showListStudent() {
+        let drawTable = '';
+        for (let i = 0;i<listStudent.length;i++){
+            drawTable +='<tr>'+
+                '<td>'+(i+1)+'</td>'+
+                '<td>'+listStudent[i]+'</td>'+
+                '<td>'+'<button style="background-color: blue; color: white; border-radius: 20%" onclick="updateStudent('+i+')">'+'Edit'+'</button>'+'</td>'+
+                '<td>'+'<button style="background-color: blue; color: white; border-radius: 20%" onclick="deleteStudent('+i+')">'+'Delete'+'</button>'+'</td>'+
+                '</tr>'
+
+        }
+        document.getElementById('drawTable').innerHTML = drawTable;
     }
-  }
-  function editStudent(index) {
-    let dataList = document.getElementById('dataList');
-    let row = dataList.children[index];
-    let name = row.children[1].textContent;
-    let newName = prompt('Enter the name to edit:', name);
-    if (newName !== null && newName !== '') {
-      row.children[1].textContent = newName;
+    showListStudent();
+    //C-Create
+    function createStudent() {
+        let inputCreate = document.getElementById('newStudent').value;
+        if (inputCreate.trim()=== ""){
+            document.getElementById('validate').innerHTML='The name is required! Please try again!';
+        }else {
+            document.getElementById('validate').innerHTML = '<lable style = "color: blue">' + 'Create Student scuccess!' + '</lable>'
+            listStudent.push(inputCreate);
+            showListStudent();
+        }
+
     }
-  }
-  function deleteStudent() {
-    
-  }
+    //U-Update
+    function updateStudent(index) {
+        let editStudent = prompt('Bạn có muốn sửa đổi tên '+ listStudent[index]);
+        if (editStudent.trim() === ""){
+            document.getElementById('validate').innerHTML='The name is required! Please try again!';
+        }else {
+            let flag = false
+            for (let i = 0 ; i<listStudent.length;i++){
+                if (editStudent === listStudent[i]){
+                    flag = true
+                    break;
+                }
+            }
+            if (flag){
+                document.getElementById('validate').innerHTML = 'The name is existed! Please try again!'
+            }else {
+                document.getElementById('validate').innerHTML = '<lable style = "color: blue">' + 'Update Student scuccess!' + '</lable>'
+                listStudent[index]=editStudent
+                showListStudent();
+            }
+        }
+    }
+    //D-Delete
+    function deleteStudent(index) {
+        if (confirm("Bạn muốn học sinh có tên "+listStudent[index])){
+            document.getElementById('validate').innerHTML = '<lable style = "color: blue">' + 'TAO XÓA MÀY RỒI! KAKA' + '</lable>'
+            listStudent.splice(index,1)
+            showListStudent()
+        }else {
+            document.getElementById('validate').innerHTML = 'MÀY KHÔNG THÍCH XÓA THÌ THÔI!'
+        }
+    }
+    //Search
+   function Search() {
+       let valueSearch = document.getElementById('search').value;
+       if (valueSearch.trim()=== ""){
+           showListStudent();
+       }else {
+           listSearch = [];
+           for (let i = 0;i<listStudent.length;i++){
+               if (listStudent[i].toLowerCase().search(valueSearch.toLowerCase())!==-1){
+                   listSearch.push(listStudent[i])
+               }
+           }
+         showListSearch();
+       }
+   }
+   function showListSearch() {
+       let drawTable = '';
+       for (let i = 0; i < listSearch.length; i++) {
+           //Cách 1: Cộng chuỗi thông thường
+           // drawTable += '<tr>' +
+           //     '<td>' + (i + 1) + '</td>' +
+           //     '<td>' + listStudent[i] + '</td>' +
+           //     '</tr>'
+           //Cách 2: Dùng string template
+           drawTable += `<tr>
+                                <td>${i + 1}</td>
+                                <td>${listSearch[i]}</td>
+                                <td><button onclick="updateStudent(${i})">Edit</button></td>
+                                 <td><button onclick="deleteStudent(${i})">Delete</button></td>
+                           </tr>`
+       }
+       document.getElementById('drawTable').innerHTML = drawTable;
+   }
 </script>
-</body>
-</html>
 </body>
 </html>
